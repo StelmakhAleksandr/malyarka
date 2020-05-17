@@ -39,7 +39,9 @@ import {CustomerDialogComponent} from './customer/customer-dialog/customer-dialo
 import {MatDialogModule} from '@angular/material/dialog';
 import {TokenInterceptor} from './user/token.interceptor';
 import {AuthComponent} from './user/auth/auth.component';
-import { CarDialogComponent } from './car/car-dialog/car-dialog.component';
+import {CarDialogComponent} from './car/car-dialog/car-dialog.component';
+import {FabComponent} from './shared/fab/fab.component';
+import {MatTabsModule} from "@angular/material/tabs";
 
 
 const appRoutes: Routes = [
@@ -58,7 +60,8 @@ const appRoutes: Routes = [
     PhoneMaskDirective,
     CustomerDialogComponent,
     AuthComponent,
-    CarDialogComponent
+    CarDialogComponent,
+    FabComponent
   ],
   imports: [
     BrowserModule, RouterModule.forRoot(appRoutes),
@@ -69,7 +72,7 @@ const appRoutes: Routes = [
     NgxMatDatetimePickerModule, NgxMatTimepickerModule, NgxMatNativeDateModule,
     HttpClientModule,
     BrowserAnimationsModule, FormsModule, ReactiveFormsModule, MatAutocompleteModule,
-    Ng2SearchPipeModule, MatDialogModule,
+    Ng2SearchPipeModule, MatDialogModule, MatTabsModule,
   ],
   providers: [MatDatepickerModule, {
     provide: HTTP_INTERCEPTORS,

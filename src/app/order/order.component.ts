@@ -1,10 +1,10 @@
-import {Component, ViewChild, AfterViewInit, TemplateRef} from '@angular/core';
+import {AfterViewInit, Component, TemplateRef, ViewChild} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {Observable, of as observableOf} from 'rxjs';
 import {catchError, map, startWith, switchMap, tap} from 'rxjs/operators';
 import {OrderService} from './order.service';
 import {Order, OrderStatus} from './order';
-import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormControl, ValidatorFn, Validators} from '@angular/forms';
 import {Customer} from '../customer/customer';
 import {CustomerService} from '../customer/customer.service';
 import {Ng2SearchPipe} from 'ng2-search-filter';
@@ -191,7 +191,7 @@ export class OrderComponent implements AfterViewInit {
     this.editedOrder = Object.assign({}, order);
   }
 
-  addOrder() {
+  addOrder(): void {
     if (!this.isNewRecord) {
       this.editedOrder = {
         id: 0,
@@ -255,6 +255,5 @@ export class OrderComponent implements AfterViewInit {
       length: this.paginator.length
     });
   }
-
 }
 

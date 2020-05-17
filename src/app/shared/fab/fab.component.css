@@ -1,0 +1,16 @@
+.container {
+  position: fixed;
+  bottom: 0;
+  height: 50px;
+  width: 100%;
+  left: 0;
+  right: 100%;
+  background: #f5f5f5;
+}
+
+.fab {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%,-50%);
+}

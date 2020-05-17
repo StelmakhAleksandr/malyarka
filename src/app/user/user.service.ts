@@ -13,7 +13,7 @@ export class UserService {
   constructor(private http: HttpClient) {
     this.user = {
       user: {id: 1, name: 'sasha'},
-      token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJcdTIwMThpZFx1MjAxOSI6MSwiXHUyMDE4bmFtZVx1MjAxOSI6InNhc2hhIn0.YKcYllZ2QB_7SfTKRgK4YADFFyMCrZV1_dyLbL_noK8\n'
+      token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJcdTIwMThpZFx1MjAxOSI6MX0.q2xLICgWkqp8yV1nE-L3KL_gv3zrKOO3GMSAHqhbc7A\n'
     };
   }
 
@@ -27,8 +27,4 @@ export class UserService {
   getToken() {
     return this.user.token;
   }
-
-
-
-
 }
