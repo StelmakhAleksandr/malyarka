@@ -1,0 +1,205 @@
+<mat-accordion>
+
+  <div class="loading-shade" *ngIf="isLoadingResults">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <p>
+    <button mat-fab color="primary" (click)="addOrder()" aria-label="Добавить">
+      <mat-icon>add</mat-icon>
+    </button>
+  </p>
+
+  <p *ngFor="let order of data">
+    <ng-template [ngTemplateOutlet]="loadTemplate(order)"
+                 [ngTemplateOutletContext]="{ $implicit: order}">
+    </ng-template>
+  </p>
+  <mat-paginator [length]="resultsLength" [pageSize]="30" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</mat-accordion>
+
+
+<ng-template #readOnlyTemplate let-order>
+  <mat-expansion-panel id="panel-{{order.id}}" [expanded]="activeOrderId === order.id"
+                       (opened)="setActiveOrderId(order.id)" hideToggle>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{order.description}}
+      </mat-panel-title>
+      <!--      <mat-panel-description>-->
+      <!--        {{car.number}}-->
+      <!--      </mat-panel-description>-->
+    </mat-expansion-panel-header>
+    <p>Статус: {{order.orderStatus?.title}}</p>
+    <p>Цена: {{order.cost}} </p>
+    <p>Дата создания: <br> {{order.createDate | date :'short'}}</p>
+    <p>Планируемая дата приезда:<br> {{order.planArrivalDate | date :'short'}}</p>
+    <p>Планируемая дата отъезда:<br> {{order.planDepartureDate | date :'short'}}</p>
+    <p>Фактическая дата приезда:<br> {{order.factArrivalDate | date :'short'}}</p>
+    <p>Фактическая дата отъезда:<br> {{order.factDepartureDate | date :'short'}}</p>
+    <p>
+      <button mat-fab color="primary" (click)="editOrder(order)" aria-label="Редактировать">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-fab color="primary"  aria-label="Удалить">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </p>
+  </mat-expansion-panel>
+</ng-template>
+
+<ng-template #editTemplate>
+  <mat-expansion-panel id="panel-{{editedOrder.id}}" [expanded]="activeOrderId === editedOrder.id"
+                       (opened)="setActiveOrderId(editedOrder.id)" hideToggle>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{editedOrder.description}}
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <form class="example-form">
+      <p>
+        <mat-form-field appearance="outline" class="example-full-width">
+          <mat-label>Описание</mat-label>
+          <textarea matInput [(ngModel)]='editedOrder.description'
+                    [name]='editedOrder.description'
+                    [ngModelOptions]="{standalone: true}"></textarea>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="outline" class="example-full-width">
+          <mat-label>Клиент</mat-label>
+          <input type="text" matInput [formControl]="customerControl" autocomplete="off" [matAutocomplete]="customer">
+          <mat-autocomplete #customer="matAutocomplete" [displayWith]="customerDisplay">
+            <mat-option (click)="openCustomerDialog()">
+              <mat-icon>add_circle</mat-icon>
+              Новый клиент
+            </mat-option>
+            <mat-option *ngFor="let option of  customerFilteredOptions | async" [value]="option">
+              {{option.name}} {{option.surname}} {{option.phoneNumber}}
+            </mat-option>
+          </mat-autocomplete>
+
+          <mat-error *ngFor="let validation of validationMessages.customerControl">
+            <div *ngIf="customerControl.hasError(validation.type)">
+              {{validation.message}}
+            </div>
+          </mat-error>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="outline" class="example-full-width">
+          <mat-label>Машина</mat-label>
+          <input type="text" matInput [formControl]="carControl" autocomplete="off" [matAutocomplete]="auto">
+          <mat-autocomplete #auto="matAutocomplete" [displayWith]="carDisplay">
+            <mat-option (click)="openCarDialog()">
+              <mat-icon>add_circle</mat-icon>
+              Новая машина
+            </mat-option>
+            <mat-option *ngFor="let option of  carFilteredOptions | async" [value]="option">
+              {{option.title}}
+            </mat-option>
+          </mat-autocomplete>
+
+          <mat-error *ngFor="let validation of validationMessages.carControl">
+            <div *ngIf="carControl.hasError(validation.type)">
+              {{validation.message}}
+            </div>
+          </mat-error>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="outline" class="example-full-width">
+          <mat-label>Статус</mat-label>
+          <mat-select [(ngModel)]="editedOrder.status" name="status"
+                      [ngModelOptions]="{standalone: true}">
+            <mat-option *ngFor="let status of statuses" [value]="status.id">
+              {{status.title}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="outline" class="example-full-width">
+          <mat-label>Цена</mat-label>
+          <input matInput type="number" class="example-right-align" [(ngModel)]='editedOrder.cost'
+                 [name]='editedOrder.cost'
+                 [ngModelOptions]="{standalone: true}">
+          <span matPrefix>₴&nbsp;</span>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="outline" class="example-full-width">
+          <mat-label>Планируемая дата приезда</mat-label>
+          <input matInput [ngxMatDatetimePicker]="picker" placeholder="Выбрать дату и время"
+                 [(ngModel)]="editedOrder.planArrivalDate"
+                 [name]="editedOrder.planArrivalDate | date :'short'"
+                 [ngModelOptions]="{standalone: true}"
+                 disabled>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <ngx-mat-datetime-picker #picker [showSpinners]="true" [showSeconds]="false"
+                                   [disabled]="false"
+                                   [stepHour]="1" [stepMinute]="5"
+                                   [disableMinute]="false" [hideTime]="false">
+          </ngx-mat-datetime-picker>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="outline" class="example-full-width">
+          <mat-label>Планируемая дата отъезда</mat-label>
+          <input matInput [ngxMatDatetimePicker]="picker2" placeholder="Выбрать дату и время"
+                 [(ngModel)]="editedOrder.planDepartureDate"
+                 [name]="editedOrder.planDepartureDate | date :'short'"
+                 [ngModelOptions]="{standalone: true}"
+                 disabled>
+          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+          <ngx-mat-datetime-picker #picker2 [showSpinners]="true" [showSeconds]="false"
+                                   [disabled]="false"
+                                   [stepHour]="1" [stepMinute]="5"
+                                   [disableMinute]="false" [hideTime]="false">
+          </ngx-mat-datetime-picker>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="outline" class="example-full-width">
+          <mat-label>Фактическая дата приезда</mat-label>
+          <input matInput [ngxMatDatetimePicker]="picker3" placeholder="Выбрать дату и время"
+                 [(ngModel)]="editedOrder.factArrivalDate"
+                 [name]="editedOrder.factArrivalDate | date :'short'"
+                 [ngModelOptions]="{standalone: true}"
+                 disabled>
+          <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+          <ngx-mat-datetime-picker #picker3 [showSpinners]="true" [showSeconds]="false"
+                                   [disabled]="false"
+                                   [stepHour]="1" [stepMinute]="5"
+                                   [disableMinute]="false" [hideTime]="false">
+          </ngx-mat-datetime-picker>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="outline" class="example-full-width">
+          <mat-label>Фактическая дата отъезда</mat-label>
+          <input matInput [ngxMatDatetimePicker]="picker4" placeholder="Выбрать дату и время"
+                 [(ngModel)]="editedOrder.factDepartureDate"
+                 [name]="editedOrder.factDepartureDate | date :'short'"
+                 [ngModelOptions]="{standalone: true}"
+                 disabled>
+          <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+          <ngx-mat-datetime-picker #picker4 [showSpinners]="true" [showSeconds]="false"
+                                   [disabled]="false"
+                                   [stepHour]="1" [stepMinute]="5"
+                                   [disableMinute]="false" [hideTime]="false">
+          </ngx-mat-datetime-picker>
+        </mat-form-field>
+      </p>
+      <p>
+        <button mat-fab color="primary" (click)="cancel()" aria-label="Отменить">
+          <mat-icon>cancel</mat-icon>
+        </button>
+        <button mat-fab color="primary" (click)="saveOrder()" aria-label="Сохранить">
+          <mat-icon>save</mat-icon>
+        </button>
+      </p>
+    </form>
+  </mat-expansion-panel>
+</ng-template>
+

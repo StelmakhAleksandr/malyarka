@@ -1,0 +1,41 @@
+<div mat-dialog-content>
+  <form [formGroup]="customerForm" class="example-form">
+    <p>
+      <mat-form-field appearance="outline" class="example-full-width">
+        <mat-label>Имя</mat-label>
+        <input matInput placeholder="Имя" [(ngModel)]='data.name'
+               [name]='data.name'
+               [ngModelOptions]="{standalone: true}">
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field appearance="outline" class="example-full-width">
+        <mat-label>Фамилия</mat-label>
+        <input matInput placeholder="Фамилия" [(ngModel)]='data.surname'
+               [name]='data.surname'
+               [ngModelOptions]="{standalone: true}">
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field appearance="outline" class="example-full-width">
+        <mat-label>Телефон</mat-label>
+        <input matInput placeholder="Телефон" appPhoneMask formControlName="phoneControl">
+      </mat-form-field>
+    </p>
+  </form>
+</div>
+
+<div mat-dialog-actions>
+<!--  <button mat-button (click)="onNoClick()">Отмена</button>-->
+<!--  <button mat-button (click)="createCustomer()">Ok</button>-->
+  <button mat-fab color="primary" (click)="onNoClick()" aria-label="Отмена">
+    <mat-icon>cancel</mat-icon>
+  </button>
+  <button mat-fab color="primary" (click)="createCustomer()" aria-label="Ok">
+    <mat-icon>check</mat-icon>
+  </button>
+<!--  <button mat-icon-button color="primary" (click)="editOrder(order)" aria-label="Редактировать">-->
+<!--    <mat-icon>edit</mat-icon>-->
+<!--  </button>-->
+<!--  <button mat-button [mat-dialog-close]="createCustomer()" cdkFocusInitial>Ok</button>-->
+</div>

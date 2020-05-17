@@ -1,0 +1,19 @@
+<form class="example-form">
+  <p>
+    <mat-form-field appearance="outline" class="example-full-width">
+      <mat-label>Логин</mat-label>
+      <input matInput placeholder="Логин" [(ngModel)]='username'
+             [name]='username'
+             [ngModelOptions]="{standalone: true}">
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field appearance="outline" class="example-full-width">
+      <mat-label>Пароль</mat-label>
+      <input matInput placeholder="Пароль" type="password" [(ngModel)]='pass'
+             [name]='pass'
+             [ngModelOptions]="{standalone: true}">
+    </mat-form-field>
+  </p>
+  <button mat-raised-button (click)="login()" color="primary">Войти</button>
+</form>

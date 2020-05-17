@@ -1,0 +1,27 @@
+<mat-accordion>
+  <mat-paginator [length]="100" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]" (page)="paginator = $event"></mat-paginator>
+
+  <button mat-raised-button color="primary" (click)="pzdc()">pzdc</button>
+
+  <div *ngIf="paginator">
+    <div>List length: {{paginator.length}}</div>
+    <div>Page size: {{paginator.pageSize}}</div>
+    <div>Page index: {{paginator.pageIndex}}</div>
+    <div>Page index: {{paginator}}</div>
+  </div>
+
+  <mat-expansion-panel (opened)="panelOpenState = true"
+                       (closed)="panelOpenState = false"
+    *ngFor="let item of response">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{item.name}} {{item.surname}}
+      </mat-panel-title>
+      <mat-panel-description>
+        {{item.phonenumber}}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <p>I'm visible because I am open</p>
+  </mat-expansion-panel>
+</mat-accordion>
+

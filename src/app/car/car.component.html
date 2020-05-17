@@ -1,0 +1,84 @@
+<mat-accordion>
+
+  <div class="loading-shade" *ngIf="isLoadingResults">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <p>
+    <button mat-icon-button color="primary" (click)="addCar()" aria-label="Добавить">
+      <mat-icon>add</mat-icon>
+    </button>
+  </p>
+
+  <p *ngFor="let car of data">
+    <ng-template [ngTemplateOutlet]="loadTemplate(car)"
+                 [ngTemplateOutletContext]="{ $implicit: car}">
+    </ng-template>
+  </p>
+  <mat-paginator [length]="resultsLength" [pageSize]="30" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</mat-accordion>
+
+
+<ng-template #readOnlyTemplate let-car>
+  <mat-expansion-panel id="panel-{{car.id}}" [expanded]="activeCarId === car.id" (opened)="setActiveCarId(car.id)" hideToggle>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{car.title}}
+      </mat-panel-title>
+<!--      <mat-panel-description>-->
+<!--        {{car.number}}-->
+<!--      </mat-panel-description>-->
+    </mat-expansion-panel-header>
+    <p>
+      Цвет: {{car.color}}
+    </p>
+    <p>
+      Id Клиента: {{car.customerId}}
+    </p>
+    <button mat-icon-button color="primary" (click)="editCar(car)" aria-label="Добавить">
+      <mat-icon>edit</mat-icon>
+    </button>
+
+  </mat-expansion-panel>
+</ng-template>
+
+<ng-template #editTemplate>
+  <mat-expansion-panel id="panel-{{editedCar.id}}" [expanded]="activeCarId === editedCar.id" (opened)="setActiveCarId(editedCar.id)" hideToggle >
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{editedCar.title}}
+      </mat-panel-title>
+<!--      <mat-panel-description>-->
+<!--        {{editedCar.number}}-->
+<!--      </mat-panel-description>-->
+    </mat-expansion-panel-header>
+
+    <form class="example-form">
+      <p>
+        <mat-form-field class="example-full-width">
+          <mat-label>Название:</mat-label>
+          <input matInput [(ngModel)]='editedCar.title' [name]='editedCar.title' [ngModelOptions]="{standalone: true}">
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field class="example-full-width">
+          <mat-label>Номер:</mat-label>
+          <input matInput [(ngModel)]='editedCar.number' [name]='editedCar.number' [ngModelOptions]="{standalone: true}">
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field class="example-full-width">
+          <mat-label>Цвет:</mat-label>
+          <input matInput [(ngModel)]='editedCar.color' [name]='editedCar.color' [ngModelOptions]="{standalone: true}">
+        </mat-form-field>
+      </p>
+      <button mat-icon-button color="primary" (click)="saveCar()" aria-label="Сохранить">
+        <mat-icon>save</mat-icon>
+      </button>
+      <button mat-icon-button color="primary" (click)="cancel()" aria-label="Отменить">
+        <mat-icon>cancel</mat-icon>
+      </button>
+    </form>
+  </mat-expansion-panel>
+</ng-template>
+

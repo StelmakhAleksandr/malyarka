@@ -1,0 +1,37 @@
+<div mat-dialog-content>
+  <form class="example-form">
+    <p>
+      <mat-form-field appearance="outline" class="example-full-width">
+        <mat-label>Название</mat-label>
+        <input matInput placeholder="Название" [(ngModel)]='data.title'
+               [name]='data.title'
+               [ngModelOptions]="{standalone: true}">
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field appearance="outline" class="example-full-width">
+        <mat-label>Номер</mat-label>
+        <input matInput placeholder="Номер" [(ngModel)]='data.number'
+               [name]='data.number'
+               [ngModelOptions]="{standalone: true}">
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field appearance="outline" class="example-full-width">
+        <mat-label>Цвет RGB</mat-label>
+        <input matInput placeholder="Цвет RGB" [(ngModel)]='data.color'
+               [name]='data.color'
+               [ngModelOptions]="{standalone: true}">
+      </mat-form-field>
+    </p>
+  </form>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-fab color="primary" (click)="onNoClick()" aria-label="Отмена">
+    <mat-icon>cancel</mat-icon>
+  </button>
+  <button mat-fab color="primary" (click)="saveCar()" aria-label="Ok">
+    <mat-icon>check</mat-icon>
+  </button>
+</div>
